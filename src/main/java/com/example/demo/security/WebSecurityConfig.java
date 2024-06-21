@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(WHITELIST)
                         .permitAll()
+                        .requestMatchers("/profile").authenticated()
                         .anyRequest()
                         .authenticated()
                 )

@@ -22,6 +22,8 @@ public class Account {
 
     private String firstname;
 
+    private String role;
+
     public Long getId() {
         return id;
     }

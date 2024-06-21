@@ -32,9 +32,11 @@ public class AccountController {
     public String registerSubmit(@ModelAttribute Account account, Model model) {
         try {
             accountService.save(account);
+            logger.info(LogMessages.ACC_CREATED.getMessage()+" for: "+account.getEmail());
             model.addAttribute("msg", "Register successful");
             return "register";
         } catch (Exception e) {
+            logger.info(LogMessages.ACC_FA_CREATED.getMessage()+" for: "+account.getEmail());
             model.addAttribute("error", "Something went wrong");
             return "register";
         }

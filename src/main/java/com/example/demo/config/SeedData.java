@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.Controller.AccountController;
+import com.example.demo.logging.LogMessages;
 import com.example.demo.models.Post;
 import com.example.demo.repositories.PostRepository;
 import com.example.demo.services.PostService;
@@ -9,10 +11,13 @@ import org.springframework.stereotype.Component;
 import com.example.demo.models.Account;
 import com.example.demo.services.AccountService;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 @Component
 public class SeedData implements CommandLineRunner {
+    private static final Logger logger = LoggerFactory.getLogger(SeedData.class);
 
     @Autowired
     private PostService postService;
@@ -32,6 +37,7 @@ public class SeedData implements CommandLineRunner {
             account01.setPassword("password");
             account01.setFirstname("user01");
             accountService.save(account01);
+            logger.info(LogMessages.DATA_SAVED.getMessage());
         }
 
         if (accountService.findByEmail("gullu@pug.com") == null) {
@@ -40,6 +46,7 @@ public class SeedData implements CommandLineRunner {
             account02.setPassword("password");
             account02.setFirstname("user02");
             accountService.save(account02);
+            logger.info(LogMessages.DATA_SAVED.getMessage());
         }
 
         // Check if posts already exist
@@ -56,6 +63,8 @@ public class SeedData implements CommandLineRunner {
             post02.setBody("This is a post 02");
             post02.setAccount(account02);
             postService.save(post02);
+
+            logger.info(LogMessages.POST_ADDED.getMessage());
         }
     }
 }
