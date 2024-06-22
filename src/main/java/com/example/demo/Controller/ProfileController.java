@@ -11,7 +11,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
+        model.addAttribute("user", user.getUsername());
         return "profile";
     }
 }

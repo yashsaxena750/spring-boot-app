@@ -36,23 +36,23 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(WHITELIST)
                         .permitAll()
-                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
+                       .loginPage("/login")
+                       .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error")
                         .permitAll()
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/logout?success")
-                )
+               .logout(logout -> logout
+                       .logoutUrl("/logout")
+                       .logoutSuccessUrl("/login")
+               )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/db-console/**"))

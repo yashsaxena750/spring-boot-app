@@ -1,14 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-<div th:if="${user}">
-    <span th:text="${user}"></span>
-</div>
-
 </body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+  <head th:replace="/fragments/head :: head">
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="images/nav-bg.jpg" alt="">
+    </div>
+    <header th:replace="/fragments/header :: header">
+  </div>
+
+    <div th:if="${user}">
+          <span th:text="welcome"></span>
+         <span th:text="${user}"></span>
+    </div>
+
+  <section class="about_section layout_padding">
+    <div class="container  ">
+
+   
+    </div>
+  </section>
+  <footer th:replace="/fragments/footer :: footer">
+</body>
+
 </html>

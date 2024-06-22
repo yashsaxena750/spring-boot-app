@@ -43,3 +43,4 @@ src/main/java/resources/logback.xml
 
 ## log dir ##
 log/
+src/main/resources/application.properties

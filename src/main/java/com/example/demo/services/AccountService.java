@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.Controller.HomeController;
 import com.example.demo.logging.LogMessages;
 import com.example.demo.models.Account;
+import com.example.demo.models.Authority;
 import com.example.demo.repositories.AccountRepository;
 import com.example.demo.util.constants.Roles;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -36,48 +38,35 @@ public class AccountService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public Account save(Account account){
-        account.setRole(Roles.USER.getRole());
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        if (account.getRole() == null){
+            account.setRole(Roles.USER.getRole());
+        }
         return accountRepository.save(account);
-    }
-
-    public Account findByEmail(String email) {
-        return accountRepository.findByEmail(email);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        Optional<Account> optionalAccount = Optional.ofNullable(accountRepository.findByEmail(email));
-        if(!optionalAccount.isPresent())
-        {
-            logger.info(LogMessages.USER_NOT_FOUND.getMessage()+" for email: "+email);
-            throw new UsernameNotFoundException("No account found");
-        }
+        Optional<Account> optionalAccount = accountRepository.findOneByEmailIgnoreCase(email);
+        if(!optionalAccount.isPresent()){
+            logger.info("user not found");
+            throw new UsernameNotFoundException("Account not found");
 
+        }
         Account account = optionalAccount.get();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        if (request == null) {
-            throw new IllegalStateException("HttpServletRequest not found");
+        logger.info(account.getEmail());
+        List<GrantedAuthority> grantedAuthority = new ArrayList<>();
+        grantedAuthority.add(new SimpleGrantedAuthority(account.getRole()));
+
+        Set<Authority> authorities =  account.getAuthorities();
+        for(Authority _auth: authorities){
+            grantedAuthority.add(new SimpleGrantedAuthority(_auth.getName()));
         }
 
-        // Log full request URL
-        String requestURL = request.getRequestURL().toString();
-        String queryString = request.getQueryString();
-        String fullURL = queryString == null ? requestURL : requestURL + "?" + queryString;
-        logger.info("Full URL: " + fullURL);
-        String errorParam = request.getParameter("error");
+        return new User(account.getEmail(), account.getPassword(), grantedAuthority);
+    }
 
-        if(errorParam == null) {
-            logger.info(LogMessages.USER_LOGIN_SUCCESS.getMessage() + " for email: " + email);
-            List<GrantedAuthority> grantedAuthority = new ArrayList<>();
-            grantedAuthority.add(new SimpleGrantedAuthority("Allow"));
-            return new User(account.getEmail(), account.getPassword(), grantedAuthority);
-        }
-        else
-        {
-            logger.info(LogMessages.USER_LOGIN_FAILURE.getMessage() + " for email: " + email);
-            return null;
-        }
+    public Account findByEmail(String email) {
+        return accountRepository.findByEmail(email);
     }
 }
