@@ -77,7 +77,7 @@ public class SeedData implements CommandLineRunner {
 
             account03.setEmail("admin@pug.com");
             account03.setPassword("password");
-            account03.setFirstname("user03");
+            account03.setFirstname("admin");
             account03.setRole(Roles.ADMIN.getRole());
             Set<Authority> authorities = new HashSet<>();
             authorityService.findById(Privileges.RESET_ANY_USER_PASSWORD.getId()).ifPresent(authorities::add);
@@ -101,6 +101,12 @@ public class SeedData implements CommandLineRunner {
             post02.setBody("This is a post 02");
             post02.setAccount(account02);
             postService.save(post02);
+
+            Post post03 = new Post();
+            post03.setTitle("Admin Post");
+            post03.setBody("Hello I am puggy the admin of this website, here you will find out more info about pugs");
+            post03.setAccount(account03);
+            postService.save(post03);
 
             logger.info(LogMessages.POST_ADDED.getMessage());
         }
