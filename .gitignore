@@ -44,3 +44,6 @@ src/main/java/resources/logback.xml
 ## log dir ##
 log/
 src/main/resources/application.properties
+src/main/resources/config.properties
+D:\springboot\final\src\main\resources\config.properties
+
