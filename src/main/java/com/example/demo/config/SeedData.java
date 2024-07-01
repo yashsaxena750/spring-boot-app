@@ -15,17 +15,20 @@ import com.example.demo.models.Account;
 import com.example.demo.models.Authority;
 import com.example.demo.services.AccountService;
 import com.example.demo.services.AuthorityService;
-
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 @Component
 public class SeedData implements CommandLineRunner {
+    String configFilePath = "D:\\springboot\\final\\src\\main\\resources\\config.properties";
+    Properties prop = new Properties();
+
     private static final Logger logger = LoggerFactory.getLogger(SeedData.class);
 
     @Autowired
@@ -51,40 +54,45 @@ public class SeedData implements CommandLineRunner {
         Account account01 = new Account();
         Account account02 = new Account();
         Account account03 = new Account();
-        // Check if accounts already exist
-        if (accountService.findByEmail("yash@pug.com") == null) {
 
-            account01.setEmail("yash@pug.com");
-            account01.setPassword("password");
-            account01.setFirstname("user01");
-            account01.setRole(Roles.USER.getRole());
-            accountService.save(account01);
-            logger.info(LogMessages.DATA_SAVED.getMessage());
-        }
-
-        if (accountService.findByEmail("gullu@pug.com") == null) {
-
-            account02.setEmail("gullu@pug.com");
-            account02.setPassword("password");
-            account02.setFirstname("user02");
-            account02.setRole(Roles.USER.getRole());
-            accountService.save(account02);
-            logger.info(LogMessages.DATA_SAVED.getMessage());
-        }
-
-        if(accountService.findByEmail("admin@pug.com")==null)
+        try (FileInputStream propsInput = new FileInputStream(configFilePath)) {
         {
+            prop.load(propsInput);
+        // Check if accounts already exist
+            if (accountService.findByEmail("yash@pug.com") == null) {
 
-            account03.setEmail("admin@pug.com");
-            account03.setPassword("password");
-            account03.setFirstname("admin");
-            account03.setRole(Roles.ADMIN.getRole());
-            Set<Authority> authorities = new HashSet<>();
-            authorityService.findById(Privileges.RESET_ANY_USER_PASSWORD.getId()).ifPresent(authorities::add);
-            authorityService.findById(Privileges.ACCESS_ADMIN_PANEL.getId()).ifPresent(authorities::add);
-            account03.setAuthorities(authorities);
-            accountService.save(account03);
+                account01.setEmail("yash@pug.com");
+                account01.setPassword(prop.getProperty("yash_pug"));
+                account01.setFirstname("user01");
+                account01.setRole(Roles.USER.getRole());
+                accountService.save(account01);
+                logger.info(LogMessages.DATA_SAVED.getMessage());
+            }
 
+            if (accountService.findByEmail("gullu@pug.com") == null) {
+
+                account02.setEmail("gullu@pug.com");
+                account02.setPassword(prop.getProperty("gullu_pug"));
+                account02.setFirstname("user02");
+                account02.setRole(Roles.USER.getRole());
+                accountService.save(account02);
+                logger.info(LogMessages.DATA_SAVED.getMessage());
+            }
+
+            if(accountService.findByEmail("admin@pug.com")==null)
+            {
+
+                account03.setEmail("admin@pug.com");
+                account03.setPassword(prop.getProperty("admin_gullu"));
+                account03.setFirstname("admin");
+                account03.setRole(Roles.ADMIN.getRole());
+                Set<Authority> authorities = new HashSet<>();
+                authorityService.findById(Privileges.RESET_ANY_USER_PASSWORD.getId()).ifPresent(authorities::add);
+                authorityService.findById(Privileges.ACCESS_ADMIN_PANEL.getId()).ifPresent(authorities::add);
+                account03.setAuthorities(authorities);
+                accountService.save(account03);
+
+            }
         }
 
         // Check if posts already exist
@@ -111,4 +119,5 @@ public class SeedData implements CommandLineRunner {
             logger.info(LogMessages.POST_ADDED.getMessage());
         }
     }
+}
 }

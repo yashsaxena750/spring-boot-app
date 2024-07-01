@@ -3,7 +3,9 @@ package com.example.demo.services;
 import com.example.demo.models.Post;
 import com.example.demo.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,4 +37,6 @@ public class PostService {
 
         return postRepository.save(post);
     }
+
+
 }

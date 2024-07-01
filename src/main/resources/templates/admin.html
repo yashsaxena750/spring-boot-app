@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-  <head th:replace="/fragments/head :: head">
+<head th:replace="/fragments/head :: head">
+  <title>Admin Page</title>
+</head>
 
 <body class="sub_page">
 
@@ -9,18 +11,22 @@
     <div class="bg-box">
       <img src="images/nav-bg.jpg" alt="">
     </div>
-    <header th:replace="/fragments/header :: header">
+    <header th:replace="/fragments/header :: header"></header>
   </div>
 
   <!-- about section -->
 
-  <section class="about_section layout_padding">
-    <div class="container  ">
-            Admin...
-   
-    </div>
-  </section>
-  <footer th:replace="/fragments/footer :: footer">
+    welcome Admin Gullu.
+
+    <span sec:authorize="hasRole('ROLE_ADMIN')">
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/users">users</a>
+      </li>
+    </span>
+  
+
+  <footer th:replace="/fragments/footer :: footer"></footer>
+
 </body>
 
 </html>

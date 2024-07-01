@@ -37,16 +37,26 @@
               <a class="nav-link" href="/profile">Profile</a>
             </li>
           </span>
+
+          <span sec:authorize="isAuthenticated()">
+            <li class="nav-item">
+              <a class="nav-link" href="/post/add">Add Post</a>
+            </li>
+          </span>
+
           <span sec:authorize="isAuthenticated()">
             <li class="nav-item">
               <a class="nav-link" href="/logout">Logout</a>
             </li>
           </span>
+
+          
           <span sec:authorize="hasRole('ROLE_ADMIN')">
             <li class="nav-item">
               <a class="nav-link" href="/admin">admin</a>
             </li>
           </span>
+          
         </ul>
       </div>
     </nav>

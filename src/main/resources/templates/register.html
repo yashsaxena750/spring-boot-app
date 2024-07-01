@@ -27,6 +27,7 @@
                 th:action="@{/register}"
                 th:object="${account}"
                 method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div>
               <input id="email" type="email" th:field="*{email}" class="form-control" placeholder="Email" />
             </div>
